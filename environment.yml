@@ -1,0 +1,6 @@
+name: quasi-splines
+channels:
+  - defaults
+  - conda-forge
+prefix: /anaconda3/envs/quasi-splines
+
