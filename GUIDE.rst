@@ -46,6 +46,12 @@ INITIALIZATION:
 $ git config --global core.editor "emacs -nw"
 $ git config --global user.name "Patrick Clarke" &&
 $ git config --global user.email "pattyclarke@gmail.com"
+
+On GITHUB: Make a new repository, then...
+$ git remote add origin remote repository URL# Sets the new remote
+$ git remote -v
+
+$ git push -u origin master
 )
     
 Project Structure
