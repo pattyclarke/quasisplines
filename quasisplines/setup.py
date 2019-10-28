@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-   name='quasi-splines',
+   name='quasisplines',
    version='0.1.0',
    description='Symbolic Spline Computations in Sage',
    author='Patrick Clarke',

@@ -61,6 +61,7 @@ def OA_to_tuple(g, R, s):
    
 def tuple_to_OA(g):
    R = g[0].parent()
+   s = len(g)
    (OA, e, y) = OAey(R, s)
    R_to_OA = R.hom(y, OA)
    ge = sum([R_to_OA(g[i]) *e[i] for i in range(s)])
@@ -91,6 +92,15 @@ def G_ideal(R, s, J):
    G = reduce(intersect,
                  [GM(j,k) for k in range(1,s) for j in range(k)])
    return G
+
+######################################## checking a tuple against an ideal-difference condition ########
+
+def is_J_spline(J, g):
+    s = len(g)
+    for p in [(i,j) for j in range(s) for i in range(j)]:
+        if not (g[p[0]] - g[p[1]] in J(p[0],p[1])):
+            return False
+    return True
 
 ############### generators of the spline R-module and ring.  ######################
 ##### also a possibly expensive routine to try to find small generating sets #############
@@ -138,32 +148,70 @@ def OBexy(srg):
 
 def E_ideal(srg):
    (OB, e, x, y) = OBexy(srg)
+   s = len(srg[0])
    E = ideal([1 - sum(e)] +
              [ei - ei^2 for ei in e] +
              [e[j]*e[k] for k in range(1,s) for j in range(k)])
    return E
 
 def R_ideal(srg):
-   R = srg[0][0].parent()
-   (OB, e, x, y) = OBexy(srg)
-   R_to_OB = R.hom(y,OB)
-   bigR = (ideal([x[l] - sum([R_to_OB(srg[l][j]) *e[j] for j in range(s)]) for l in range(len(srg))])+
-               E_ideal(srg))
-   R = bigR.elimination_ideal(e)
-   return R
+    R = srg[0][0].parent()
+    (OB, e, x, y) = OBexy(srg)
+    s = len(srg[0])
+    R_to_OB = R.hom(y,OB)
+    bigR = (ideal([x[l] - sum([R_to_OB(srg[l][j]) *e[j] for j in range(s)]) for l in range(len(srg))])+E_ideal(srg))
+    R = bigR.elimination_ideal(e)
+    return R
+
+
+
 
 ##################### the ring of splines SP #########################
 ######## it is computed from a list of spline ring generators ###########
 
+#from sage.rings.polynomial.flatten import FlatteningMorphism
+
 def SPxy(srg):
    R = srg[0][0].parent()
+   py = list(R.gens())
    num_gens = len(srg)
-   n = len(R.gens())
-   SP = PolynomialRing(QQ, num_gens+n, 'x')
+   px = list(PolynomialRing(R, 'x', num_gens).gens()) #
+   xyvars = px+py 
+#   fl = FlatteningMorphism(temp_SP) #
+   SP = PolynomialRing(QQ, xyvars) # 
+ #  n = len(R.gens())
+ #  SP = PolynomialRing(QQ, num_gens+n, 'x')
    x = SP.gens()[:num_gens]
    y = SP.gens()[num_gens:]
    return (SP, x, y)
 
+def R_to_SP(srg):
+   R = srg[0][0].parent()
+   (SP, x, y) = SPxy(srg)
+   out = R.hom(y, SP)
+   return out
+
+def tuple_to_SP(smg, in_tup):
+   R = smg[0][0].parent()
+   s = len(smg[0])
+   srg = spline_ring_generators(smg)
+   (SP, x, y) = SPxy(srg)
+   one_tup = tuple([R(1) for i in range(s)])
+   oi = None
+   for i in range(len(smg)):
+      if smg[i]==one_tup:
+         oi = i
+   if oi == None:
+      oi = 0
+      smg = [one_tup] + smg
+   lx = list(x)
+   lox = lx[:oi]+[SP(1)]+lx[oi:]
+   ox = tuple(lox)
+   cof = expand_spline(in_tup, smg)
+   oot = sum([R_to_SP(srg)(cof[i])*ox[i] for i in range(len(ox))])
+   return oot
+
+                   
 def SP_relation_ideal(srg):
    (OB, OBe, OBx, OBy) = OBexy(srg)
    (SP, x, y) = SPxy(srg)
@@ -172,13 +220,31 @@ def SP_relation_ideal(srg):
    SPR = ideal(OB_to_SP(rel) for rel in R_gens)
    return SPR
 
+def sigma_SP_to_R(SP, srg, i):
+    R = srg[0][0].parent()
+    y = R.gens()
+    i_ev_lst = [g[i] for g in srg] + list(y)
+    sigma_i = SP.hom(i_ev_lst, R)
+    return sigma_i
+
+def SP_to_tuple(SP, srg, f):
+    sigma_lst = [sigma_SP_to_R(SP, srg, i) for i in range(len(srg[0]))]
+    sigma_f = tuple([sig(f) for sig in sigma_lst])
+    return sigma_f
+
+
+ 
 ######## Below are the "pretty" versions of the objects above #######
+
+from sage.rings.polynomial.flatten import FlatteningMorphism
 
 def pretty_SPxy(smg):
     srg = spline_ring_generators(smg)
     R = srg[0][0].parent()
-    pSP = PolynomialRing(R, 'x', len(srg))
-    x = pSP.gens()
+    temp_pSP = PolynomialRing(R, 'x', len(srg))
+    fl = FlatteningMorphism(temp_pSP)
+    pSP = fl.codomain()
+    x = temp_pSP.gens()
     y = R.gens()
     return (pSP, x, y)
 
@@ -209,6 +275,14 @@ def sheet_intersection(smg, j, k):
     out_ideal = ideal([SP_to_R(f) for f in Ijk_elim.gens()])
     return out_ideal
 
+def contact_ideals(smg):
+   s = len(smg[0])
+   ideals = [[sheet_intersection(smg, j, k) for j in range(s)] for k in range(s)]
+   def out_J(u,v):
+      return ideals[v][u]
+   return out_J
+
+   
 ############# A Hilbert series routine for degree filtration #########################
 
 def spline_Hilbert_series(R, s, J):
@@ -233,7 +307,9 @@ def spline_Hilbert_polynomial(R,s,J):
    t = LTp.parent().gens()[0]
    Mp = M.hilbert_polynomial()
    P_diff = Mp-LTp
-   P = P_diff(t = t+1)
+   toss = PolynomialRing(QQ, 'd')
+   d = toss.gen()
+   P = P_diff(t = d+1)
    return P
 
 ########################### triangle input ###############################
@@ -274,25 +350,59 @@ def facet_hyperplane_ideal(t1, t2):
    h_ideal = ideal(ideal_generators)
    return h_ideal
 
-def triangle_splines(triangle_list, r):
+def triangle_splines(triangle_list = [], r=0):
+    r"""
+    Returns a tuple of 
+    - the coordinate ring of the affine space containing the 'triangles' (simplices), 
+    - the number s of triangles(simplices), 
+    - and a function on [0,..,s-1]^2 which outputs ideals of the triangle intersections.
+   
+    INPUT:
+   
+    - ``triangle_list`` -- presumbably a list of simplices. Each is itself a list of its vertices. 
+
+    - ``r`` -- a smoothness parameter.
+    
+    OUTPUT: (R,s,Jr) = (a ring, a number of simplices, an (s x s)-'table' of ideals given as a function of two integers) 
+    
+    EXAMPLES:
+ 
+    This example is Dalbec and Schenck counterexample to Rose's conjecture ::
+
+        sage: (v0, v1,v2,v3, v4, v5) = ( (3,0,0), (0,3,0), (-2,-2,1), (1,0,-3), (0,0,3), (0,0,0) ) #triangle along which tetrahedra are glued is [v0, v1, v2]
+        sage: (t0,t1,t2,t3,t4,t5) = ((v5,v0,v1,v4),(v5,v0,v1,v3),(v5,v2,v4,v0),(v5,v2,v4,v1),(v5,v2,v3,v0),(v5,v2,v3,v1))
+        sage: (dsR, dss, dsJ) = triangle_splines((t0, t1, t2, t3, t4, t5) , 0)
+
+    TESTS::
+
+        sage: (v0, v1,v2,v3, v4, v5) = ( (3,0,0), (0,3,0), (-2,-2,1), (1,0,-3), (0,0,3), (0,0,0) ) #triangle along which tetrahedra are glued is [v0, v1, v2]
+        sage: (t0,t1,t2,t3,t4,t5) = ((v5,v0,v1,v4),(v5,v0,v1,v3),(v5,v2,v4,v0),(v5,v2,v4,v1),(v5,v2,v3,v0),(v5,v2,v3,v1))
+        sage: (dsR, dss, dsJ) = triangle_splines((t0, t1, t2, t3, t4, t5) , 0)
+        sage: dsR
+        Multivariate Polynomial Ring in y0, y1, y2 over Rational Field
+        sage: dss
+        6
+        sage: dsJ(2,3)
+        Ideal (-6*y0 + 6*y1) of Multivariate Polynomial Ring in y0, y1, y2 over Rational Field
+    """
     t_list = list(triangle_list)
     n = len(t_list[0][0])
     s = len(t_list)
     R = PolynomialRing(QQ,'y',n)
-    def J(j,k):
-        outJ =  hyperplane_ideal(t_list[j], t_list[k])
-        return outJ^(r+1)
-    return (R,s,J)
+    def Jr(j,k):
+       Jjk =  hyperplane_ideal(t_list[j], t_list[k])
+       return Jjk^(r+1)
+    return (R,s,Jr)
 
 def triangle_splines_facets(triangle_list, r):
     t_list = list(triangle_list)
     n = len(t_list[0][0])
     s = len(t_list)
     R = PolynomialRing(QQ,'y',n)
-    def J(j,k):
-        outJ =  facet_hyperplane_ideal(t_list[j], t_list[k])
-        return outJ^(r+1)
-    return (R,s,J)
+    def Jr(j,k):
+        Jjk =  facet_hyperplane_ideal(t_list[j], t_list[k])
+        return Jjk^(r+1)
+    return (R,s,Jr)
 
 def cone_over_triangle(triangle):
     triangle_as_lists = [list(v) for v in triangle]
@@ -306,7 +416,6 @@ def cone_over_triangle(triangle):
 def cone_over_triangulation(triangle_list):
     output_list = [ cone_over_triangle(t) for t in triangle_list ]
     return tuple(output_list)
-
 
 def random_triangle_list(n):
     num_points = 1+n+abs(ZZ.random_element())
@@ -387,9 +496,17 @@ def principal_random_RsJ(n = None, s = None):
 #### expands a spline tuple as in terms of smg ####
 
 def expand_spline(g, smg):
+   R = smg[0][0].parent()
    Gsmg = ideal([tuple_to_OA(generator) for generator in smg])
    expansion_coeffs= tuple_to_OA(g).lift(Gsmg)
-   return expansion_coeffs
+   OA = expansion_coeffs[0].parent()
+   s = len(g)
+   zero_list = [0 for i in range(s)]
+   OA_to_R = OA.hom(zero_list+list(R.gens()), R)
+   ec_in_R = [OA_to_R(c) for c in expansion_coeffs]
+   return ec_in_R
+
+
 
 
 #### these routines compares the hilbert series's of the "top term" ideal and the original ideal ###
@@ -411,7 +528,7 @@ def principal_top_term_ideal(J,s):
          return ideal(top_term(J_list[k][j-k].gens()[0]))
    return out_J
 
-######## the routines below require that Barwick-Stone's QuillenSuslin package is installed  ############
+######## the routines below require that Barwick-Stone's QuillenSuslin package is installed  #########
 def is_projective(smg):
    mac2 = Macaulay2()
    mac2.eval('loadPackage "QuillenSuslin"; ')
@@ -438,10 +555,10 @@ def compute_free_basis(smg):
 ######### the containment graph ##########
 
 def my_contains(I,J):
-    for g in J.gens():
-    	if not g in I:
-	   return false
-    return true
+   for g in J.gens():
+      if not g in I:
+         return false
+   return true
 
 def spline_graph_mat_entry(J, i1, i2, j, k):
     if (i1, i2) == (j, k) or (i1, i2) == (k, j):
@@ -484,7 +601,7 @@ def type_triangulation(triangles):
       for t in list_it_triang:
          t.sort()
       list_it_triang.sort()
-      if list_it_triang ==  list_triangles:		
+      if list_it_triang ==  list_triangles:
          return it_triang
    print "no match"
 

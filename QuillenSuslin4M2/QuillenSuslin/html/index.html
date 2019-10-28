@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>  <!-- for emacs: -*- coding: utf-8 -*- -->
+<!-- Apache may like this line in the file .htaccess: AddCharset utf-8 .html -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"	 "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head><title>QuillenSuslin -- computes a free basis of a projective module over a polynomial ring</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" type="text/css" href="../../../../Macaulay2/Style/doc.css"/>
+</head>
+<body>
+<table class="buttons">
+  <tr>
+    <td><div><a href="_change__Var.html">next</a> | previous | <a href="_change__Var.html">forward</a> | backward | up | top | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a></div>
+
+    </td>
+  </tr>
+</table>
+<div><a href="index.html" title="computes a free basis of a projective module over a polynomial ring">QuillenSuslin</a> :: <a href="index.html" title="computes a free basis of a projective module over a polynomial ring">QuillenSuslin</a></div>
+<hr/>
+<div><h1>QuillenSuslin -- computes a free basis of a projective module over a polynomial ring</h1>
+<div class="single"><h2>Description</h2>
+<div>Using the algorithms in Logar-Sturmfels and Fabianska-Quadrat, this package computes a free basis of a projective module over a polynomial ring with coefficients in the rationals, integers, or a finite field.  It also provides methods to solve related problems involving completing a unimodular matrix to a square invertible matrix over a polynomial ring with coefficients in the rationals, integers, or a finite field, or a Laurent polynomial ring with coefficients in the rationals or a finite field.<p/>
+For mathematical background and applications, see <ul><li>A. Fabianska.<em> Algorithmic analysis of presentations of groups and modules. </em><a href="http://darwin.bth.rwth-aachen.de/opus/volltexte/2009/2950/">http://darwin.bth.rwth-aachen.de/opus/volltexte/2009/2950/</a>, Jan 2009.</li>
+<li>T. Y. Lam.<em> Serre's problem on projective modules.</em> Springer Monographs in Mathematics. Springer-Verlag, Berlin, 2006.</li>
+<li>A. Logar and B. Sturmfels.<em> Algorithms for the Quillen-Suslin theorem.</em> J. Algebra, 145(1):231-239, 1992.</li>
+<li>A. Fabianska and A. Quadrat.<em> Applications of the Quillen-Suslin theorem to multidimensional systems theory.</em> Grobner bases in control theory and signal processing. Radon Series Comp. Appl. Math (3):23-106, 2007.</li>
+</ul>
+</div>
+</div>
+<div class="single"><h2>Authors</h2>
+<ul><li><div class="single"><a href="http://faculty.uscupstate.edu/bbarwick/">Brett Barwick</a><span> &lt;<a href="mailto:bbarwick@uscupstate.edu">bbarwick@uscupstate.edu</a>></span></div>
+</li>
+<li><div class="single"><a href="http://math.adelphi.edu/~bstone/">Branden Stone</a><span> &lt;<a href="mailto:bstone@adelphi.edu">bstone@adelphi.edu</a>></span></div>
+</li>
+</ul>
+</div>
+<div class="single"><h2>Certification <img src="../../../../Macaulay2/Style/GoldStar.png" alt="a gold star"/></h2>
+<p>Version <b>1.7</b> of this package was accepted for publication in <a href="http://j-sag.org/Volume5/">volume 5</a> of the journal <a href="http://j-sag.org/">The Journal of Software for Algebra and Geometry</a> on 2013-09-18, in the article <a href="http://www.j-sag.org/Volume5/jsag-5-2013.pdf">Computing free bases for projective modules</a>.  That version can be obtained <a href="http://www.j-sag.org/Volume5/QuillenSuslin.m2">from the journal</a> or from the <em>Macaulay2</em> source code repository, <a href="http://github.com/Macaulay2/M2/blob/master/M2/Macaulay2/packages/GraphicalModels.m2">http://github.com/Macaulay2/M2/blob/master/M2/Macaulay2/packages/GraphicalModels.m2</a>, commit number 8a3b2962b97153977eeaf6f92b5f48e246dd8e69.</p>
+</div>
+<div class="single"><h2>Version</h2>
+This documentation describes version <b>1.7</b> of QuillenSuslin.</div>
+<div class="single"><h2>Source code</h2>
+The source code from which this documentation is derived is in the file <a href="../../../../Macaulay2/QuillenSuslin.m2">QuillenSuslin.m2</a>.</div>
+<div class="single"><h2>Exports</h2>
+<div class="exports"><ul><li><div class="single">Functions and commands<ul><li><span><a href="_change__Var.html" title="computes a change of variables which make the first entry of a unimodular row monic in a specified variable">changeVar</a> -- computes a change of variables which make the first entry of a unimodular row monic in a specified variable</span></li>
+<li><span><a href="_complete__Matrix.html" title="completes a unimodular matrix over a polynomial ring or Laurent polynomial ring to a square invertible matrix">completeMatrix</a> -- completes a unimodular matrix over a polynomial ring or Laurent polynomial ring to a square invertible matrix</span></li>
+<li><span><a href="_compute__Free__Basis.html" title="computes a free basis of a projective module">computeFreeBasis</a> -- computes a free basis of a projective module</span></li>
+<li><span><a href="_get__Max__Ideal.html" title="computes a maximal ideal containing a given ideal in a polynomial ring">getMaxIdeal</a> -- computes a maximal ideal containing a given ideal in a polynomial ring</span></li>
+<li><span><a href="_horrocks.html" title="computes a local solution to the unimodular row problem over a localization at a maximal ideal">horrocks</a> -- computes a local solution to the unimodular row problem over a localization at a maximal ideal</span></li>
+<li><span><a href="_is__Projective.html" title="determines if a given module is projective with constant rank over a Noetherian ring">isProjective</a> -- determines if a given module is projective with constant rank over a Noetherian ring</span></li>
+<li><span><a href="_is__Unimodular.html" title="determines if a given matrix is unimodular">isUnimodular</a> -- determines if a given matrix is unimodular</span></li>
+<li><span><a href="_max__Minors.html" title="computes the ideal generated by the maximal non-vanishing minors of a given matrix">maxMinors</a> -- computes the ideal generated by the maximal non-vanishing minors of a given matrix</span></li>
+<li><span><a href="_patch.html" title="patch together local solutions to eliminate a variable">patch</a> -- patch together local solutions to eliminate a variable</span></li>
+<li><span><a href="_qs__Algorithm.html" title="computes a solution to the unimodular matrix problem">qsAlgorithm</a> -- computes a solution to the unimodular matrix problem</span></li>
+<li><span><a href="_qs__Isomorphism.html" title="computes an isomorphism between a free module and a given projective module">qsIsomorphism</a> -- computes an isomorphism between a free module and a given projective module</span></li>
+</ul>
+</div>
+</li>
+<li><div class="single">Symbols<ul><li><span><a href="___Check__Projective.html" title="optional input which gives the user the option to check whether the given module is projective">CheckProjective</a> -- optional input which gives the user the option to check whether the given module is projective</span></li>
+<li><span><a href="___Check__Unimodular.html" title="optional input which gives the user the option to check whether the given matrix is unimodular">CheckUnimodular</a> -- optional input which gives the user the option to check whether the given matrix is unimodular</span></li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>  <!-- for emacs: -*- coding: utf-8 -*- -->
+<!-- Apache may like this line in the file .htaccess: AddCharset utf-8 .html -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"	 "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head><title>completeMatrix -- completes a unimodular matrix over a polynomial ring or Laurent polynomial ring to a square invertible matrix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" type="text/css" href="../../../../Macaulay2/Style/doc.css"/>
+</head>
+<body>
+<table class="buttons">
+  <tr>
+    <td><div><a href="_compute__Free__Basis.html">next</a> | <a href="___Check__Unimodular.html">previous</a> | <a href="_compute__Free__Basis.html">forward</a> | <a href="___Check__Unimodular.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a></div>
+
+    </td>
+  </tr>
+</table>
+<div><a href="index.html" title="computes a free basis of a projective module over a polynomial ring">QuillenSuslin</a> :: <a href="_complete__Matrix.html" title="completes a unimodular matrix over a polynomial ring or Laurent polynomial ring to a square invertible matrix">completeMatrix</a></div>
+<hr/>
+<div><h1>completeMatrix -- completes a unimodular matrix over a polynomial ring or Laurent polynomial ring to a square invertible matrix</h1>
+<div class="single"><h2>Synopsis</h2>
+<ul><li><dl class="element"><dt>Usage: </dt><dd><tt>M = completeMatrix U</tt></dd></dl>
+</li>
+<li><div class="single">Inputs:<ul><li><span><tt>U</tt>, <span>a <a href="../../Macaulay2Doc/html/___Matrix.html">matrix</a></span>,  a unimodular matrix over a polynomial ring with coefficients in <tt>QQ</tt>, <tt>ZZ</tt>, or <tt>ZZ/p</tt> for <tt>p</tt> a prime integer, or a Laurent polynomial ring over <tt>QQ</tt> or <tt>ZZ/p</tt></span></li>
+</ul>
+</div>
+</li>
+<li><div class="single"><a href="../../Macaulay2Doc/html/_using_spfunctions_spwith_spoptional_spinputs.html">Optional inputs</a>:<ul><li><span><tt>Verbose => </tt><span><span>an <a href="../../Macaulay2Doc/html/___Z__Z.html">integer</a></span>, <span>default value 0</span>,  which controls the level of output of the method (0, 1, 2, 3, or 4)</span></span></li>
+</ul>
+</div>
+</li>
+<li><div class="single">Outputs:<ul><li><span><tt>M</tt>, <span>a <a href="../../Macaulay2Doc/html/___Matrix.html">matrix</a></span>,  which completes <tt>U</tt> to a square invertible matrix</span></li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="single"><h2>Description</h2>
+<div><p/>
+Given a unimodular  m &times;&nbsp;n matrix over a polynomial ring with coefficients in <tt>QQ</tt>, <tt>ZZ</tt>, or <tt>ZZ/p</tt> with <tt>p</tt> a prime integer, this method returns the inverse of the matrix returned by <a href="_qs__Algorithm.html" title="computes a solution to the unimodular matrix problem">qsAlgorithm</a>.  The first m rows or columns (depending on whether  m &lt; n  or  m > n) of this matrix are equal to <tt>U</tt> and the determinant of the matrix is a unit in the polynomial ring.<table class="examples"><tr><td><pre>i1 : R = ZZ/101[x,y]
+
+o1 = R
+
+o1 : PolynomialRing</pre>
+</td></tr>
+<tr><td><pre>i2 : U = matrix{{x^2*y+1,x+y-2,2*x*y}}
+
+o2 = | x2y+1 x+y-2 2xy |
+
+             1       3
+o2 : Matrix R  &lt;--- R</pre>
+</td></tr>
+<tr><td><pre>i3 : isUnimodular U
+
+o3 = true</pre>
+</td></tr>
+<tr><td><pre>i4 : M = completeMatrix U
+
+o4 = {0} | x2y+1 x+y-2 2xy |
+     {0} | 50x   0     -1  |
+     {1} | 0     1     0   |
+
+             3       3
+o4 : Matrix R  &lt;--- R</pre>
+</td></tr>
+<tr><td><pre>i5 : det M
+
+o5 = 1
+
+o5 : R</pre>
+</td></tr>
+</table>
+<p/>
+The method can also be used over a Laurent polynomial ring with coefficients in <tt>QQ</tt> or <tt>ZZ/p</tt> for <tt>p</tt> a prime integer.  The following example demonstrates how to construct a Laurent polynomial ring and also how to use the method on a unimodular matrix over the ring.<table class="examples"><tr><td><pre>i6 : R = QQ[x,Inverses => true,MonomialOrder => Lex]
+
+o6 = R
+
+o6 : PolynomialRing</pre>
+</td></tr>
+<tr><td><pre>i7 : U = matrix{{3*x^-1-2-2*x+2*x^2, 3*x^-1-2*x,2*x},{6*x^-1+25-23*x-16*x^2+20*x^3, 6*x^-1+29-4*x-20*x^2,2+4*x+20*x^2}}
+
+o7 = | 2x2-2x-2+3x-1         -2x+3x-1         2x        |
+     | 20x3-16x2-23x+25+6x-1 -20x2-4x+29+6x-1 20x2+4x+2 |
+
+             2       3
+o7 : Matrix R  &lt;--- R</pre>
+</td></tr>
+<tr><td><pre>i8 : M = completeMatrix U
+
+o8 = | 2x2-2x-2+3x-1                  -2x+3x-1              2x            |
+     | 20x3-16x2-23x+25+6x-1          -20x2-4x+29+6x-1      20x2+4x+2     |
+     | -1/270x2+1/108x-1/540-1/180x-1 1/270x-1/180-1/180x-1 -1/270x+1/180 |
+
+             3       3
+o8 : Matrix R  &lt;--- R</pre>
+</td></tr>
+<tr><td><pre>i9 : det M
+
+      1
+o9 = ---
+     180
+
+o9 : R</pre>
+</td></tr>
+</table>
+</div>
+</div>
+<div class="single"><h2>See also</h2>
+<ul><li><span><a href="_qs__Algorithm.html" title="computes a solution to the unimodular matrix problem">qsAlgorithm</a> -- computes a solution to the unimodular matrix problem</span></li>
+</ul>
+</div>
+<div class="waystouse"><h2>Ways to use <tt>completeMatrix</tt> :</h2>
+<ul><li>completeMatrix(Matrix)</li>
+</ul>
+</div>
+</div>
+</body>
+</html>
+

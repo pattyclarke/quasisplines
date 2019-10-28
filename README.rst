@@ -1,37 +1,17 @@
 
 ===========================
-Sage DnD  Module Repository
+Sage QuasiSplines  Module Repository
 ===========================
 
-This is simple project to play with the statistics of DnD attribute rolls.
+Some sage-implemented routies for computing with quasisplines.
 
 
 Usage
 -----
 
-Within the SageMath environment, the basic usage is illustrated by the following:
+See the jupyter notebook...
+See GUIDE.rst too...
 
-    sage: import sagednd.dnd_ability_rolls as dnd                                           
-    sage: get_dnd_ability_rolls = dnd.get_dnd_ability_rolls     
-    sage: dnd_ability_roll_score = dnd.dnd_ability_roll_score
-    sage: rolls = get_dnd_ability_rolls()                                             
-    sage: roll_scores = [dnd_ability_roll_score(r) for r in rolls]
-
-    sage: import sagednd.abstract_fitting as af
-    sage: tune = af.tune
-    sage: loss_function = af.loss_function
-
-    sage: square_error(err) = err^2                                         
-    sage: v = [1,2,3,4,5]                                                   
-    sage: f(x,a,b,c) = 3*x*a + 2*b + c                                      
-    sage: p_l = f.args()[1:]                                                
-    sage: s_p = matrix([[3],[1],[4]])                                       
-    sage: s_p_dict = {str(p):v for p,v in zip(p_l, s_p.list())}             
-    sage: s_f = f(x,**s_p_dict)                                             
-    sage: t_p = tune(v, square_error, f, p_l, s_p, 0.0022, 4)[0]
-    sage: t_p_dict = {str(p):v for p,v in zip(p_l, t_p.list())}             
-    sage: t_f = f(x,**t_p_dict)                                             
-    sage: loss_function(v, square_error, s_f), loss_function(v, square_error, t_f)
 
 Features
 --------
@@ -43,7 +23,7 @@ Demonstration
 
 The Jupyter Notebook
 
-    jupyter notebook sagednd_demo.ipynb
+    jupyter notebook quasisplines_demo.ipynb
 
 contains example code and some data visualizations.
 
@@ -107,8 +87,8 @@ MAINTENANCE: None.
 CREATION: It was was made by 
 
     $ conda config --add channels conda-forge
-    $ conda create --name sagednd sage
-    $ source activate sagednd
+    $ conda create --name quasisplines sage
+    $ source activate quasisplines
     $ conda env export > environment.yml
 
 and setup with:
@@ -160,29 +140,44 @@ Project Structure
   - ./setup.py
 
 - Documentation:
+  - ./README.rstProject Structure
+-----------------
+
+- Code:
+  - ./quasisplines.sage
+  - ./qspline_objects.sage
+  - ./quasisplines/quasisplines.py
+  - ./quasisplines/qspline_objects.py
+
+- Data & Serialization:
+  - XXX/XXX.json
+
+- Demonstration:
+  - ./quasisplines_demo.ipynb
+
+- Installation:
+  - ./quasisplines/setup.py (no setup.py in this one)
+
+- Documentation:
   - ./README.rst
-  - ./docs/index.rst
-  - ./docs/config.py
-  - ./docs/_build/html/index.html
+  - XXX./docs/index.rst
+  - XXX./docs/config.py
+  - XXX./docs/_build/html/index.html
 
 - Legal:
   - ./LICENSE
 
 - Version Control:
   - ./.gitignore
-    
+
 - Environment:
   - ./environment.yml
-  
+
 - Management:
   - ./Makefile
   - ./tests/Makefile
-  
+
 - Tests:
   - ./tests/context.py
-  - ./tests/test_dnd.py
-  - ./tests/test_dnd_ability_rolls.sage
-  - ./tests/test_dnd_ability_rolls.py
-  - ./tests/test_abstract_fitting.sage
-  - ./tests/test_abstract_fitting.py
-
+  - ./tests/test_quasisplines.sage
+  - ./tests/test_quasisplines.py
